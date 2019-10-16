@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas style="border:1px solid #ccc" width="900" height="600" id="myCanvas"></canvas>
+    <script src="randomData.js"></script>
+    <script>
+        var ctx = myCanvas.getContext('2d');
+        var arr = [0, 500, 1000, 1500, 2000, 2500, 3000];
+        var offsetX = 100,
+            offsetY = 50;
+
+        var datas = Object.keys(data);
+        var bill = 100 / 500;
+
+        ctx.translate(100, 500);
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(600, 0);
+        ctx.stroke();
+        ctx.closePath();
+
+        //绘线
+        function line(x1, y1, x2, y2) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+        //文本
+
+        function text(t, x, y, color) {
+            ctx.beginPath();
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = color;
+            ctx.fillText(t, x, y);
+            ctx.closePath();
+        }
+
+        //矩形
+        function rect(x, y, w, h, color) {
+            ctx.beginPath();
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, w, h);
+            ctx.closePath();
+        }
+
+        for (var i = 0; i < 7; i++) {
+            //y轴线
+            line(offsetX * i, 0, offsetX * i, -350);
+            //y轴刻度
+            line(offsetX * i, 0, offsetX * i, 10);
+            //x轴刻度
+            line(0, -offsetY * i, -10, -offsetY * i);
+            //x轴刻度文字
+            text(500 * i, offsetX * i, 20, '#000');
+
+            datas.map(function(v, i) {
+                //y轴刻度文字
+                text(v, -20, -25 - offsetY * i, '#000');
+
+                var end = start = 0;
+
+                data[v].map(function(a, b) {
+                    end = start + a.v * bill;
+                    //各数据块
+                    rect(start, -5 - offsetY * i, a.v * bill, -40, a.color);
+                    //各数据块内文字
+                    text(a.v, start + a.v * bill / 2, -25 - offsetY * i, '#fff');
+
+                    start = end;
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>
